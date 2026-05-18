@@ -123,7 +123,14 @@ export async function scrapeAssignments() {
     console.log('Launching browser...');
     const browser = await puppeteer.launch({
         headless: "new",
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--no-zygote',
+        ],
         ignoreDefaultArgs: ['--enable-automation']
     });
 

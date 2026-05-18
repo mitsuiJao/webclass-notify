@@ -1,5 +1,5 @@
 import { scrapeAssignments } from "./src/scraper.js";
-import { sendNotification, sendLoginRequiredNotification } from "./src/sender.js";
+import { sendNotification } from "./src/sender.js";
 import { processNotifications } from "./src/notifier.js";
 import fs from "fs/promises";
 import path from "path";
@@ -22,8 +22,7 @@ async function run() {
         const scrapeResult = await scrapeAssignments();
 
         if (scrapeResult?.loginRequired) {
-            console.log("Login is required. Sending notification...");
-            await sendLoginRequiredNotification();
+            console.log("Scraping failed. Skipping notification.");
             return;
         }
 

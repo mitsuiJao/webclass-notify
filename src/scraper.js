@@ -202,14 +202,20 @@ export async function scrapeAssignments() {
         for (const courseUrl of courseLinks) {
             console.log(`Processing course: ${courseUrl}`);
 
+            let navSuccess = false;
             await limiter.schedule(async () => {
                 try {
-                    await page.goto(courseUrl, { waitUntil: 'networkidle2' });
+                    await page.goto(courseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+                    navSuccess = true;
                 } catch (e) {
                     console.error(`Failed to load ${courseUrl}:`, e.message);
-                    return;
                 }
             });
+
+            if (!navSuccess) {
+                console.log(`  Skipping course due to navigation failure.`);
+                continue;
+            }
 
             const courseTitle = await page.title();
             console.log(`  Title: ${courseTitle}`);

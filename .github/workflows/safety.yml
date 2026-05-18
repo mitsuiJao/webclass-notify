@@ -1,0 +1,27 @@
+name: Safety Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全履歴スキャンに必要
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+  dependency-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node.jsの場合
+      - run: npm audit --audit-level=high
+
+      # Pythonの場合
+      # - run: pip install pip-audit && pip-audit

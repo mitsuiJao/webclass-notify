@@ -160,9 +160,9 @@ Google Authenticator などの認証アプリを使用してこのQRコードを
 
 ### 6. 確認
 
-`node --env-file=.env index.js`
+`$ node --env-file=.env index.js`
 
-cookieが切れる or `cookies.json`が存在しない(初回実行) の場合のみOTP認証を実行します。
+cookieが切れる or `cookies.json`が存在しない(初回実行) の場合のみOTP認証されます。
 
 変なことしない限りおそらくOTP認証は通るはずなので、一応ほったらかしでも認証は切れないようになってます。
 

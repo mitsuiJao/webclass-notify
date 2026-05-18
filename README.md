@@ -96,11 +96,23 @@ DMARCを登録しないと普通迷惑メールに振り分けられるようで
 
 ### 4.環境構築
 
-このリポジトリをクローンします
+パッケージをインストールします。aptを使ってます。
 
-そしたらnode環境を整えます
+```
+sudo apt-get install -y \
+    libatk1.0-0 libatk-bridge2.0-0 libcups2 libxss1 \
+    libgtk-3-0 libnss3 libasound2 libgbm1 \
+    libxkbcommon0 libxcomposite1 libxdamage1 \
+    libxfixes3 libxrandr2 libpango-1.0-0
+```
+
+
+インストールができたら、このリポジトリをクローンします
+
+node環境を整えます
+
 ```bash
-npm install
+$ npm install
 ```
 
 .envの作成

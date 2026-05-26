@@ -1,40 +1,57 @@
+import { Resend } from "resend";
 import config from "./config.js";
 
 export async function sendNotification(subject, body) {
-    const { teamsWebhookUrl } = config;
-    if (!teamsWebhookUrl) {
-        console.warn("TEAMS_WEBHOOK_URL not set. Skipping Teams notification.");
-        return;
+    const { teamsWebhookUrl, apikey, sendto, sendfrom } = config;
+    let sent = false;
+
+    if (teamsWebhookUrl) {
+        console.log(`Sending Teams webhook notification with subject: "${subject}"`);
+        const response = await fetch(teamsWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text: `**${subject}**\n\n${body}`,
+            }),
+        });
+
+        if (!response.ok) {
+            const responseText = await response.text();
+            const error = new Error(`Webhook request failed with status ${response.status}: ${responseText}`);
+            console.error("Failed to send Teams webhook notification:", error.message);
+            throw error;
+        }
+
+        console.log("Teams webhook notification sent successfully.");
+        sent = true;
     }
 
-    console.log(`Sending Teams webhook notification with subject: "${subject}"`);
-    const response = await fetch(teamsWebhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            text: `**${subject}**\n\n${body}`,
-        }),
-    });
+    if (apikey && sendto && sendfrom) {
+        const resend = new Resend(apikey);
+        console.log(`Sending email notification with subject: "${subject}"`);
+        const { data, error } = await resend.emails.send({
+            from: `WebClass Notifier <${sendfrom}>`,
+            to: sendto,
+            subject: subject,
+            html: body,
+        });
 
-    if (!response.ok) {
-        const responseText = await response.text();
-        const error = new Error(`Webhook request failed with status ${response.status}: ${responseText}`);
-        console.error("Failed to send Teams webhook notification:", error.message);
-        throw error;
+        if (error) {
+            console.error("Failed to send email notification:", { error });
+            throw error;
+        }
+
+        console.log("Email notification sent successfully:", { data });
+        sent = true;
     }
 
-    console.log("Teams webhook notification sent successfully.");
+    if (!sent) {
+        console.warn("No notification target configured. Set TEAMS_WEBHOOK_URL or APIKEY/SENDFROM/SENDTO.");
+    }
 }
 
 export async function sendLoginRequiredNotification() {
-    const { teamsWebhookUrl, username } = config;
-
-    if (!teamsWebhookUrl || !username) {
-        console.warn(
-            "TEAMS_WEBHOOK_URL or USER_ID not set. Skipping login required notification."
-        );
-        return;
-    }
+    const { teamsWebhookUrl, username, apikey } = config;
 
     const subject = "WebClass Scraper: Authentication Required";
     const body = `
@@ -45,21 +62,49 @@ export async function sendLoginRequiredNotification() {
         <p>This is a notification for the user: ${username}</p>
     `;
 
-    console.log("Sending authentication required notification...");
-    const response = await fetch(teamsWebhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            text: `**${subject}**\n\n${body}`,
-        }),
-    });
+    let sent = false;
 
-    if (!response.ok) {
-        const responseText = await response.text();
-        const error = new Error(`Webhook request failed with status ${response.status}: ${responseText}`);
-        console.error("Failed to send login required notification:", error.message);
-        throw error;
+    if (teamsWebhookUrl) {
+        console.log("Sending authentication required notification to Teams...");
+        const response = await fetch(teamsWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text: `**${subject}**\n\n${body}`,
+            }),
+        });
+
+        if (!response.ok) {
+            const responseText = await response.text();
+            const error = new Error(`Webhook request failed with status ${response.status}: ${responseText}`);
+            console.error("Failed to send login required notification to Teams:", error.message);
+            throw error;
+        }
+
+        console.log("Login required notification sent to Teams successfully.");
+        sent = true;
     }
 
-    console.log("Login required notification sent successfully.");
+    if (apikey && username) {
+        const resend = new Resend(apikey);
+        console.log("Sending authentication required email notification...");
+        const { data, error } = await resend.emails.send({
+            from: "Scraper Alert <notification@mitsuijao.fun>",
+            to: username,
+            subject: subject,
+            html: body,
+        });
+
+        if (error) {
+            console.error("Failed to send login required email notification:", { error });
+            throw error;
+        }
+
+        console.log("Login required email notification sent successfully:", { data });
+        sent = true;
+    }
+
+    if (!sent) {
+        console.warn("No login-required notification target configured.");
+    }
 }

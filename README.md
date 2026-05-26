@@ -89,6 +89,9 @@ cat << EOF > .env
 USER_ID='{your_ID}'
 PASSWORD='{your_password}'
 TEAMS_WEBHOOK_URL='{teams_webhook_url}'
+APIKEY='{Resend_APIKEY}'
+SENDFROM='notification@{your_domain}'
+SENDTO='{channel_mailaddress}'
 MFA_SECRET='{MFA_SECRET}'
 EOF
 ```
@@ -98,6 +101,9 @@ EOF
 USER_ID='{your_ID}'
 PASSWORD='{your_password}'
 TEAMS_WEBHOOK_URL='{teams_webhook_url}'
+APIKEY='{Resend_APIKEY}'
+SENDFROM='notification@{your_domain}'
+SENDTO='{channel_mailaddress}'
 MFA_SECRET='{MFA_SECRET}'
 ```
 
@@ -106,6 +112,9 @@ MFA_SECRET='{MFA_SECRET}'
 | USER_ID  | Microsoftアカウントのメールアドレス                        | 
 | PASSWORD | Microsoftアカウントのパスワード                            | 
 | TEAMS_WEBHOOK_URL | Teamsで発行したWebhook URL                       | 
+| APIKEY   | ResendのAPIKEY（メール通知も使う場合）                     | 
+| SENDFROM | 送信元メールアドレス（メール通知も使う場合）               | 
+| SENDTO   | 通知先メールアドレス（メール通知も使う場合）               | 
 | MFA_SECRET   | 後述するシークレット                                   | 
 
 

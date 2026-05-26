@@ -106,7 +106,7 @@ export async function processNotifications(scrapedAssignments) {
         console.log(`Prepared notification for ${newAssignments.length} new assignments.`);
     }
     if (dueSoonAssignments.length > 0) {
-        const subject = `##【期限間近】${dueSoonAssignments.length}件の課題が24時間以内に期限を迎えます`;
+        const subject = `## 【期限間近】${dueSoonAssignments.length}件の課題が24時間以内に期限を迎えます`;
         const body = ` 期限間近の課題\n\n以下の課題が24時間以内に期限を迎えます。\n\n${dueSoonAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
         notificationsToSend.push({ subject, body });
         console.log(`Prepared notification for ${dueSoonAssignments.length} assignments due soon.`);

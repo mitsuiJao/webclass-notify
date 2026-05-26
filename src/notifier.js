@@ -100,14 +100,14 @@ export async function processNotifications(scrapedAssignments) {
     const notificationsToSend = [];
 
     if (newAssignments.length > 0) {
-        const subject = `【新規課題】${newAssignments.length}件の新しい課題が追加されました`;
-        const body = `## 新規課題\n\n以下の新しい課題が追加されました。\n\n${newAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
+        const subject = `## 【新規課題】${newAssignments.length}件の新しい課題が追加されました`;
+        const body = `新規課題\n\n以下の新しい課題が追加されました。\n\n${newAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
         notificationsToSend.push({ subject, body });
         console.log(`Prepared notification for ${newAssignments.length} new assignments.`);
     }
     if (dueSoonAssignments.length > 0) {
-        const subject = `【期限間近】${dueSoonAssignments.length}件の課題が24時間以内に期限を迎えます`;
-        const body = `## 期限間近の課題\n\n以下の課題が24時間以内に期限を迎えます。\n\n${dueSoonAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
+        const subject = `##【期限間近】${dueSoonAssignments.length}件の課題が24時間以内に期限を迎えます`;
+        const body = ` 期限間近の課題\n\n以下の課題が24時間以内に期限を迎えます。\n\n${dueSoonAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
         notificationsToSend.push({ subject, body });
         console.log(`Prepared notification for ${dueSoonAssignments.length} assignments due soon.`);
     }

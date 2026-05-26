@@ -1,28 +1,18 @@
 import config from "./config.js";
 
-function htmlToPlainText(html) {
-    return html
-        .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<\/(p|div|li|h1|h2|h3|ul|ol)>/gi, "\n")
-        .replace(/<[^>]+>/g, "")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-}
-
 export async function sendNotification(subject, body) {
     const { teamsWebhookUrl } = config;
     if (!teamsWebhookUrl) {
         console.warn("TEAMS_WEBHOOK_URL not set. Skipping Teams notification.");
         return;
     }
-    const text = htmlToPlainText(body);
 
     console.log(`Sending Teams webhook notification with subject: "${subject}"`);
     const response = await fetch(teamsWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            text: `**${subject}**\n\n${text}`,
+            text: `**${subject}**\n\n${body}`,
         }),
     });
 
@@ -55,12 +45,12 @@ export async function sendLoginRequiredNotification() {
         <p>This is a notification for the user: ${username}</p>
     `;
 
-    console.log(`Sending authentication required notification for ${username}...`);
+    console.log("Sending authentication required notification...");
     const response = await fetch(teamsWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            text: `**${subject}**\n\n${htmlToPlainText(body)}`,
+            text: `**${subject}**\n\n${body}`,
         }),
     });
 

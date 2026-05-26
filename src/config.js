@@ -25,9 +25,7 @@ export default {
     username: process.env.USER_ID,
     password: process.env.PASSWORD,
     mfaSecret: process.env.MFA_SECRET,
-    apikey: process.env.APIKEY,
-    sendfrom: process.env.SENDFROM,
-    sendto: process.env.SENDTO,
+    teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL,
     baseUrl: 'https://webclass.kosen-k.go.jp/webclass/',
     entryUrl: 'https://webclass.kosen-k.go.jp/webclass/index.php',
 };

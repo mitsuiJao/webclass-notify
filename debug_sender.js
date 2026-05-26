@@ -1,45 +1,31 @@
-import { Resend } from "resend";
-
 async function main() {
-  const subject = "Test Email";
-  const body = "<p>This is a test email from the notifier.</p>";
+  const subject = "Test Teams Notification";
+  const body = "This is a test Teams webhook notification from the notifier.";
 
-  const APIKEY = process.env.APIKEY;
-  if (!APIKEY) {
-    console.warn("APIKEY not set. Skipping email notification.");
+  const webhookUrl = process.env.TEAMS_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("TEAMS_WEBHOOK_URL not set. Skipping Teams notification.");
     return;
   }
-  const sendTo = process.env.SENDTO;
-  if (!sendTo) {
-    console.warn("SENDTO not set. Skipping email notification.");
-    return;
-  }
-  const sendFrom = process.env.SENDFROM;
-  if (!sendFrom) {
-    console.warn("SENDFROM not set. Skipping email notification.");
-    return;
-  }
-
-  const resend = new Resend(APIKEY);
 
   try {
-    console.log(`Sending email with subject: "${subject}"`);
-    const { data, error } = await resend.emails.send({
-      from: `WebClass Notifier <${sendFrom}>`,
-      to: sendTo,
-      subject: subject,
-      html: body,
+    console.log(`Sending Teams webhook notification with subject: "${subject}"`);
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: `**${subject}**\n\n${body}`,
+      }),
     });
 
-    if (error) {
-      console.error("Failed to send email:", { error });
-      throw error;
+    if (!response.ok) {
+      const responseText = await response.text();
+      throw new Error(`Webhook request failed with status ${response.status}: ${responseText}`);
     }
 
-    console.log("Email sent successfully:", { data });
-    console.log("Test email sent successfully!");
+    console.log("Teams webhook notification sent successfully!");
   } catch (error) {
-    console.error("Failed to send test email:", error);
+    console.error("Failed to send test Teams notification:", error);
   }
 }
 

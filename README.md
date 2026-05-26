@@ -112,9 +112,9 @@ MFA_SECRET='{MFA_SECRET}'
 | USER_ID  | Microsoftアカウントのメールアドレス                        | 
 | PASSWORD | Microsoftアカウントのパスワード                            | 
 | TEAMS_WEBHOOK_URL | Teamsで発行したWebhook URL                       | 
-| APIKEY   | ResendのAPIKEY（メール通知も使う場合）                     | 
-| SENDFROM | 送信元メールアドレス（メール通知も使う場合）               | 
-| SENDTO   | 通知先メールアドレス（メール通知も使う場合）               | 
+| APIKEY   | ResendのAPIKEY（エラー時の管理者メール通知も使う場合）     | 
+| SENDFROM | 送信元メールアドレス（エラー時の管理者メール通知も使う場合）| 
+| SENDTO   | 管理者通知先メールアドレス（エラー時の管理者メール通知）   | 
 | MFA_SECRET   | 後述するシークレット                                   | 
 
 

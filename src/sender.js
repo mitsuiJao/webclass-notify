@@ -101,26 +101,10 @@ export async function sendErrorNotification(error) {
         <pre>${errorText}</pre>
     `;
 
-    let sent = false;
-    const errors = [];
-
-    try {
-        await sendTeamsWebhook(subject, body);
-        sent = true;
-    } catch (sendError) {
-        console.error("Failed to send runtime error notification to Teams:", sendError.message);
-        errors.push(sendError);
-    }
-
     try {
         await sendAdminEmail(subject, body);
-        sent = true;
     } catch (sendError) {
         console.error("Failed to send runtime error admin email notification:", sendError.message);
-        errors.push(sendError);
-    }
-
-    if (!sent && errors.length > 0) {
-        throw errors[0];
+        throw sendError;
     }
 }

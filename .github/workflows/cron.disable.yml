@@ -45,6 +45,7 @@ jobs:
           APIKEY: ${{ secrets.APIKEY }}
           SENDFROM: ${{ secrets.SENDFROM }}
           SENDTO: ${{ secrets.SENDTO }}
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           MFA_SECRET: ${{ secrets.MFA_SECRET }}
 
       - name: Upload state

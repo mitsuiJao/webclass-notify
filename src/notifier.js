@@ -61,7 +61,7 @@ export async function processNotifications(scrapedAssignments) {
         // 初回実行完了を知らせる特別な通知を生成
         return [{
             subject: "【WebClass通知】 初期設定が完了しました",
-            body: `<h1>初期設定完了</h1><p>WebClass課題通知ボットの初期設定が完了しました。現在登録されているすべての課題が記録されました。次回実行時から、新しい課題や期限が近い課題について通知が送信されます。</p>`
+            body: `## 初期設定完了\n\nWebClass課題通知ボットの初期設定が完了しました。現在登録されているすべての課題が記録されました。次回実行時から、新しい課題や期限が近い課題について通知が送信されます。`
         }];
     }
 
@@ -101,25 +101,13 @@ export async function processNotifications(scrapedAssignments) {
 
     if (newAssignments.length > 0) {
         const subject = `【新規課題】${newAssignments.length}件の新しい課題が追加されました`;
-        const body = `
-            <h1>新規課題</h1>
-            <p>以下の新しい課題が追加されました。</p>
-            <ul>
-                ${newAssignments.map(a => `<li><strong>${a.course}</strong>: ${a.title} (期限: ${a.deadline}) <a href="${a.url}">課題へ</a></li>`).join('')}
-            </ul>
-        `;
+        const body = `## 新規課題\n\n以下の新しい課題が追加されました。\n\n${newAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
         notificationsToSend.push({ subject, body });
         console.log(`Prepared notification for ${newAssignments.length} new assignments.`);
     }
     if (dueSoonAssignments.length > 0) {
         const subject = `【期限間近】${dueSoonAssignments.length}件の課題が24時間以内に期限を迎えます`;
-        const body = `
-            <h1>期限間近の課題</h1>
-            <p>以下の課題が24時間以内に期限を迎えます。</p>
-            <ul>
-                ${dueSoonAssignments.map(a => `<li><strong>${a.course}</strong>: ${a.title} (期限: ${a.deadline}) <a href="${a.url}">課題へ</a></li>`).join('')}
-            </ul>
-        `;
+        const body = `## 期限間近の課題\n\n以下の課題が24時間以内に期限を迎えます。\n\n${dueSoonAssignments.map(a => `- **${a.course}**: ${a.title}（期限: ${a.deadline}）[課題へ](${a.url})`).join('\n')}`;
         notificationsToSend.push({ subject, body });
         console.log(`Prepared notification for ${dueSoonAssignments.length} assignments due soon.`);
     }

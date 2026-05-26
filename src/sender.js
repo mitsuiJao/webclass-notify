@@ -8,12 +8,32 @@ async function sendTeamsWebhook(subject, body) {
     }
 
     console.log(`Sending Teams webhook notification with subject: "${subject}"`);
+
+    const adaptiveCard = {
+        type: "AdaptiveCard",
+        $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+        version: "1.2",
+        body: [
+            {
+                type: "TextBlock",
+                text: subject,
+                weight: "Bolder",
+                size: "ExtraLarge",
+                wrap: true,
+            },
+            {
+                type: "TextBlock",
+                text: body,
+                size: "Large",
+                wrap: true,
+            },
+        ],
+    };
+
     const response = await fetch(teamsWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            text: `**${subject}**\n\n${body}`,
-        }),
+        body: JSON.stringify(adaptiveCard),
     });
 
     if (!response.ok) {
@@ -71,13 +91,13 @@ export async function sendLoginRequiredNotification(errorMessage = "") {
     let sent = false;
     const errors = [];
 
-    try {
-        await sendTeamsWebhook(subject, body);
-        sent = true;
-    } catch (error) {
-        console.error("Failed to send login required notification to Teams:", error.message);
-        errors.push(error);
-    }
+    // try {
+    //     await sendTeamsWebhook(subject, body);
+    //     sent = true;
+    // } catch (error) {
+    //     console.error("Failed to send login required notification to Teams:", error.message);
+    //     errors.push(error);
+    // }
 
     try {
         await sendAdminEmail(subject, body);

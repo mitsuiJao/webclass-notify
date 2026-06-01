@@ -3,3 +3,4 @@ node_modules/
 output/
 cookies.json
 notification_state.json
+tokens.json

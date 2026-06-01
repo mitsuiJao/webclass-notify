@@ -36,7 +36,7 @@ function getAssignmentId(assignment) {
 export async function processNotifications(scrapedAssignments) {
     if (!scrapedAssignments) {
         console.log("No assignments found to process.");
-        return [];
+        return { notifications: [], newAssignments: [] };
     }
 
     const { state: notificationState, isFirstRun } = await readNotificationState();
@@ -59,10 +59,13 @@ export async function processNotifications(scrapedAssignments) {
         console.log("Initial notification state has been created.");
 
         // 初回実行完了を知らせる特別な通知を生成
-        return [{
-            subject: "【WebClass通知】 初期設定が完了しました",
-            body: `<h1>初期設定完了</h1><p>WebClass課題通知ボットの初期設定が完了しました。現在登録されているすべての課題が記録されました。次回実行時から、新しい課題や期限が近い課題について通知が送信されます。</p>`
-        }];
+        return {
+            notifications: [{
+                subject: "【WebClass通知】 初期設定が完了しました",
+                body: `<h1>初期設定完了</h1><p>WebClass課題通知ボットの初期設定が完了しました。現在登録されているすべての課題が記録されました。次回実行時から、新しい課題や期限が近い課題について通知が送信されます。</p>`
+            }],
+            newAssignments: [],
+        };
     }
 
     // --- 通常実行のロジック ---
@@ -131,5 +134,5 @@ export async function processNotifications(scrapedAssignments) {
     await writeNotificationState(notificationState);
     console.log("Notification state saved.");
 
-    return notificationsToSend;
+    return { notifications: notificationsToSend, newAssignments };
 }

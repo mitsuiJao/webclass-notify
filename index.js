@@ -1,6 +1,7 @@
 import { scrapeAssignments } from "./src/scraper.js";
 import { sendNotification, sendLoginRequiredNotification } from "./src/sender.js";
 import { processNotifications } from "./src/notifier.js";
+import { addAssignmentsToTasks } from "./src/google-tasks.js";
 import fs from "fs/promises";
 import path from "path";
 
@@ -25,7 +26,14 @@ async function run() {
             return;
         }
 
-        const notifications = await processNotifications(scrapeResult);
+        const { notifications, newAssignments } = await processNotifications(scrapeResult);
+
+        if (newAssignments && newAssignments.length > 0) {
+            const addedCount = await addAssignmentsToTasks(newAssignments);
+            if (addedCount !== null) {
+                console.log(`Added ${addedCount} assignments to Google Tasks.`);
+            }
+        }
 
         if (notifications && notifications.length > 0) {
             console.log(`Found ${notifications.length} notifications to send.`);

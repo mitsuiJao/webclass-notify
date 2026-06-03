@@ -1,5 +1,9 @@
 {
   "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:integration": "node --env-file=.env test/integration-tasks.js"
+  },
   "dependencies": {
     "bottleneck": "^2.19.5",
     "dotenv": "^17.2.3",
